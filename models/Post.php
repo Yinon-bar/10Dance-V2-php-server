@@ -16,4 +16,13 @@ class Post
     $stmt->execute();
     return $stmt;
   }
+
+  public function createNewEvent()
+  {
+    // $query = 'SELECT * FROM event_mapping';
+    // $stmt = $this->conn->prepare($query);
+    // $stmt->execute();
+    $stmt = "New event created!";
+    return $stmt;
+  }
 }

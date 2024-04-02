@@ -7,6 +7,10 @@ header('Content-Type: application/json');
 include_once '../../config.php/Database.php';
 include_once '../../models/Post.php';
 
+if (isset($_POST)) {
+  // print_r($_POST);
+}
+
 $database = new Database();
 $db = $database->connect();
 
