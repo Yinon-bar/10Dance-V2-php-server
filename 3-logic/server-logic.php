@@ -49,4 +49,14 @@ class Logic
     }
     return $stmt;
   }
+
+  public function getAllFromTable($tableName)
+  {
+    // print_r($this->tableName);
+    $query = "SELECT * FROM $tableName";
+    $stmt = $this->conn->prepare($query);
+    // $stmt->bindParam(1, $this->tableName);
+    $stmt->execute();
+    return $stmt;
+  }
 }

@@ -4,17 +4,17 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-include_once '../../config.php/Database.php';
-include_once '../../models/GetAllFromTable.php';
+include_once '../../2-utils/Database.php';
+include_once '../../3-logic/server-logic.php';
 
 $database = new Database();
 $db = $database->connect();
 
 $tableName = $_GET['tableName'];
 
-$attendees = new GetAllFromTable($db, $tableName);
+$attendees = new Logic($db);
 
-$result = $attendees->read();
+$result = $attendees->getAllFromTable($tableName);
 
 if ($result->rowCount() > 0) {
   $attendees_arr = [];
