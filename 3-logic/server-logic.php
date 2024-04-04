@@ -17,9 +17,20 @@ class Logic
     return $stmt;
   }
 
-  public function createNewEvent($tableName)
+  public function checkEventExisting($eventName)
   {
-    $query = "CREATE TABLE IF NOT EXISTS $tableName (
+    $query = "SELECT * FROM event_mapping WHERE event_name = '$eventName'";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  public function createNewEvent($customTableName)
+  {
+    $query = "CREATE TABLE IF NOT EXISTS $customTableName (
       id int AUTO_INCREMENT PRIMARY KEY,
       tz_id varchar(255),
       fName varchar(255),
@@ -36,17 +47,24 @@ class Logic
 
   public function createNewEventHebName($hebName)
   {
-    $insertHebEventNameQuery = "INSERT INTO event_mapping (event_name) VALUES('$hebName')";
-    $stmt = $this->conn->prepare($insertHebEventNameQuery);
-    $stmt->execute();
-    if ($stmt->rowCount() > 0) {
-      $insertHebEventNameQuery = "SELECT * FROM event_mapping WHERE event_name = '$hebName' LIMIT 1";
+    $checkExistingQuery = "SELECT * FROM event_mapping WHERE event_name = '$hebName'";
+    $chkStmt = $this->conn->prepare($checkExistingQuery);
+    $chkStmt->execute();
+    if ($chkStmt->rowCount() > 0) {
+      $result = $chkStmt->fetchAll(PDO::FETCH_ASSOC);
+      return $result;
+    } else {
+      $insertHebEventNameQuery = "INSERT INTO event_mapping (event_name) VALUES('$hebName')";
       $stmt = $this->conn->prepare($insertHebEventNameQuery);
       $stmt->execute();
-      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      return $result;
+      if ($stmt->rowCount() > 0) {
+        $insertHebEventNameQuery = "SELECT * FROM event_mapping WHERE event_name = '$hebName' LIMIT 1";
+        $stmt = $this->conn->prepare($insertHebEventNameQuery);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+      }
     }
-    return $stmt;
   }
 
   public function insertAttendees($data, $fileNamePure, $eventID)
