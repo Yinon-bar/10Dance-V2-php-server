@@ -4,8 +4,8 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-include_once '../../config.php/Database.php';
-include_once '../../models/Post.php';
+include_once '../../2-utils/Database.php';
+include_once '../../3-logic/server-logic.php';
 
 // תוסף לעבודה עם קבצי אקסל
 require "../../vendor/autoload.php";
@@ -17,7 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 $database = new Database();
 $db = $database->connect();
 
-$dbLogic = new Post($db);
+$dbLogic = new Logic($db);
 
 if (isset($_POST['eventName'])) {
   $filName = $_FILES["eventTable"]['name'];
