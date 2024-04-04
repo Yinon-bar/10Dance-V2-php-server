@@ -4,8 +4,8 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-include_once '../../2-utils/Database.php';
-include_once '../../3-logic/server-logic.php';
+include_once '../2-utils/Database.php';
+include_once '../3-logic/server-logic.php';
 
 $database = new Database();
 $db = $database->connect();

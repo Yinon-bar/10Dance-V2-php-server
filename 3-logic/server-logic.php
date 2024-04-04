@@ -26,14 +26,30 @@ class Logic
       lName varchar(255),
       institute varchar(255),
       isArrived int,
-      event_id int
+      event_id int,
+      FOREIGN KEY (event_id) REFERENCES event_mapping(id)
   )";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
   }
 
-  public function insertAttendees($data, $fileNamePure)
+  public function createNewEventHebName($hebName)
+  {
+    $insertHebEventNameQuery = "INSERT INTO event_mapping (event_name) VALUES('$hebName')";
+    $stmt = $this->conn->prepare($insertHebEventNameQuery);
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
+      $insertHebEventNameQuery = "SELECT * FROM event_mapping WHERE event_name = '$hebName' LIMIT 1";
+      $stmt = $this->conn->prepare($insertHebEventNameQuery);
+      $stmt->execute();
+      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $result;
+    }
+    return $stmt;
+  }
+
+  public function insertAttendees($data, $fileNamePure, $eventID)
   {
     foreach ($data as $row) {
       $tz_id = $row['0'];
@@ -41,7 +57,7 @@ class Logic
       $lName = $row['2'];
       $institute = $row['3'];
       $isArrived = $row['4'];
-      $event_id = $row['5'];
+      $event_id = $eventID;
 
       $insertAttendeeQuery = "INSERT INTO $fileNamePure (tz_id, fName, lName, institute, isArrived, event_id) VALUES('$tz_id', '$fName', '$lName', '$institute', $isArrived, $event_id)";
       $stmt = $this->conn->prepare($insertAttendeeQuery);
@@ -49,6 +65,7 @@ class Logic
     }
     return $stmt;
   }
+
 
   public function getAllFromTable($tableName)
   {
