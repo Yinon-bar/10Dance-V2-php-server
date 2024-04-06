@@ -1,5 +1,9 @@
 <?php
 
+header("Access-Control-Allow-Origin: *"); // Allow requests from any origin
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allow the specified methods
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization"); // Allow the specified headers
+
 class Logic
 {
   private $conn;
@@ -45,7 +49,7 @@ class Logic
     return $stmt;
   }
 
-  public function createNewEventHebName($hebName)
+  public function createNewEventHebName($hebName, $hebTitle, $customTableName)
   {
     $checkExistingQuery = "SELECT * FROM event_mapping WHERE event_name = '$hebName'";
     $chkStmt = $this->conn->prepare($checkExistingQuery);
@@ -54,7 +58,7 @@ class Logic
       $result = $chkStmt->fetchAll(PDO::FETCH_ASSOC);
       return $result;
     } else {
-      $insertHebEventNameQuery = "INSERT INTO event_mapping (event_name) VALUES('$hebName')";
+      $insertHebEventNameQuery = "INSERT INTO event_mapping (event_name, event_title, event_table) VALUES('$hebName', '$hebTitle', '$customTableName')";
       $stmt = $this->conn->prepare($insertHebEventNameQuery);
       $stmt->execute();
       if ($stmt->rowCount() > 0) {
@@ -84,13 +88,18 @@ class Logic
     return $stmt;
   }
 
-
   public function getAllFromTable($tableName)
   {
-    // print_r($this->tableName);
     $query = "SELECT * FROM $tableName";
     $stmt = $this->conn->prepare($query);
-    // $stmt->bindParam(1, $this->tableName);
+    $stmt->execute();
+    return $stmt;
+  }
+
+  public function loginUser($user)
+  {
+    $query = "SELECT * FROM 10dance_users WHERE user_email = '$user[user_email]' AND user_password = '$user[user_password]'";
+    $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
   }

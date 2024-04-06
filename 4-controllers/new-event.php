@@ -46,7 +46,7 @@ if (isset($_POST['eventName'])) {
       $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileNamePath);
       $data = $spreadsheet->getActiveSheet()->toArray();
       // Create table in the Database only if not exist
-      $result = $dbLogic->createNewEventHebName($_POST['eventName']);
+      $result = $dbLogic->createNewEventHebName($_POST['eventName'], $_POST['eventTitle'], $customTableName);
       $eventID = $result[0]["id"];
       $dbLogic->createNewEvent($customTableName);
       // Insert records to the new table
