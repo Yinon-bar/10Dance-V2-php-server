@@ -17,9 +17,8 @@ $appLogic = new Logic($db);
 $jwtLogic = new JwtLogic();
 
 $dataJson = json_decode(file_get_contents("php://input"));
-// print_r($dataJson->user_email);
+
 $user = ["user_email" => $dataJson->user_email, "user_password" => $dataJson->user_password];
-$userJWT = $dataJson->jwt;
 
 $result = $appLogic->loginUser($user);
 
@@ -29,13 +28,12 @@ if ($result->rowCount() > 0) {
     array_push($authUser, $row);
   }
   // print_r($authUser);
-  $authUser = $jwtLogic->valodateJWTtoken($userJWT);
+  $authUser = $jwtLogic->createJWTtoken($authUser);
   // Turn it into Json
-  // print_r($authUser);
   echo json_encode($authUser);
 } else {
   echo json_encode(
-    ["error" => 401]
+    ["error" => 503]
   );
   // http_response_code(401);
 }
