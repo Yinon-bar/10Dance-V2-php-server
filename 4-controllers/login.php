@@ -29,7 +29,7 @@ if ($result->rowCount() > 0) {
     array_push($authUser, $row);
   }
   // print_r($authUser);
-  $authUser = $jwtLogic->valodateJWTtoken($userJWT);
+  $authUser = $jwtLogic->validateJWTtoken($userJWT);
   // Turn it into Json
   // print_r($authUser);
   echo json_encode($authUser);

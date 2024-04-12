@@ -20,6 +20,7 @@ class JwtLogic
 
   public function createJWTtoken($authUser)
   {
+    // print_r($authUser);
     // Create payload info
     $payload_info = [
       "iss" => "localhost",
@@ -28,9 +29,10 @@ class JwtLogic
       "exp" => time() + 259200,
       "aud" => "myusers",
       "data" => array(
-        "id" => $authUser[0]->id,
-        "name" => $authUser[0]->user_name,
-        "email" => $authUser[0]->user_email
+        "id" => $authUser[0]["id"],
+        "name" => $authUser[0]["user_name"],
+        "email" => $authUser[0]["user_email"],
+        "role" => $authUser[0]["role"]
       )
     ];
 
@@ -40,7 +42,7 @@ class JwtLogic
     return ($authUser);
   }
 
-  public function valodateJWTtoken($jwt)
+  public function validateJWTtoken($jwt)
   {
     try {
       $decoded = JWT::decode($jwt, new Key($this->secret_key, 'HS256'));

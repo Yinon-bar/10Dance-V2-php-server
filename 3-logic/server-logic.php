@@ -103,4 +103,31 @@ class Logic
     $stmt->execute();
     return $stmt;
   }
+
+  public function registerUser($user)
+  {
+    // print_r($user);
+    $query = "SELECT * FROM 10dance_users WHERE user_email = '$user[user_email]'";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return false;
+    } else {
+      $insertNewUser = "INSERT INTO 10dance_users (user_name, user_email, user_password, role) VALUES('$user[user_name]', '$user[user_email]', '$user[user_password]', 2)";
+      $stmtNewUser = $this->conn->prepare($insertNewUser);
+      $stmtNewUser->execute();
+      if ($stmtNewUser->rowCount() > 0) {
+        $query = "SELECT * FROM 10dance_users WHERE user_email = '$user[user_email]'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        if ($stmt->execute() > 0) {
+          $insertedUser = $stmt->fetchAll(PDO::FETCH_ASSOC);
+          return $insertedUser;
+        }
+        return false;
+      }
+      return false;
+    }
+  }
 }

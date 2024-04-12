@@ -18,19 +18,27 @@ $jwtLogic = new JwtLogic();
 
 $dataJson = json_decode(file_get_contents("php://input"));
 
-$user = ["user_email" => $dataJson->user_email, "user_password" => $dataJson->user_password];
+$user = [
+  "user_institute" => $dataJson->user_institute, "user_email" => $dataJson->user_email, "user_password" => $dataJson->user_password, "user_name" => $dataJson->user_name
+];
+// save the original password
+$password_to_verify_later = $user["user_password"];
+// Bcrypt the password
+$user['user_password'] = password_hash($user['user_password'], PASSWORD_BCRYPT);
 
-$result = $appLogic->loginUser($user);
+$result = $appLogic->registerUser($user);
+// print_r($result);
 
-if ($result->rowCount() > 0) {
-  $authUser = [];
-  while ($row = $result->fetch(PDO::FETCH_OBJ)) {
-    array_push($authUser, $row);
+if ($result) {
+  // if email not taken continue
+  $userWithToken = $jwtLogic->createJWTtoken($result);
+  // encrypte password
+  $correctPassword = password_verify($password_to_verify_later, $user["user_password"]);
+  if ($correctPassword) {
+    // Turn it into Json
+    echo json_encode($userWithToken);
   }
   // print_r($authUser);
-  $authUser = $jwtLogic->createJWTtoken($authUser);
-  // Turn it into Json
-  echo json_encode($authUser);
 } else {
   echo json_encode(
     ["error" => 503]
