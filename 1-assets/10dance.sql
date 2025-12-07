@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2024 at 07:28 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Generation Time: Dec 07, 2025 at 03:59 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -410,6 +410,26 @@ INSERT INTO `orientation_day` (`id`, `tz_id`, `fName`, `lName`, `institute`, `is
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` int(255) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`) VALUES
+(1, 'user'),
+(2, 'admin'),
+(3, 'super admin');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `test`
 --
 
@@ -431,6 +451,28 @@ INSERT INTO `test` (`id`, `tz_id`, `fName`, `lName`, `institute`, `isArrived`, `
 (1, '200454551', 'ינון', 'מרדכי', 'אוניברסיטת חיפה', 0, 3),
 (2, '200585447', 'משה', 'נחום', 'טכניון', 0, 3),
 (3, '301554887', 'אבי', 'טוביה', 'האוניברסיטה העברית', 0, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(255) NOT NULL,
+  `user_name` varchar(255) NOT NULL,
+  `user_password` varchar(255) NOT NULL,
+  `user_email` varchar(255) NOT NULL,
+  `role` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `user_name`, `user_password`, `user_email`, `role`) VALUES
+(1, 'ינון בר', '053508384', 'yinonbar1988@gmail.com', 3),
+(2, 'ינון בר', '$2y$10$SBAYKIXy9VaFgeqvHUy1A..cHvZU90k3JKOVPk6wp8RpVLV87naxy', 'test@example.com', 2);
 
 --
 -- Indexes for dumped tables
@@ -457,10 +499,23 @@ ALTER TABLE `orientation_day`
   ADD KEY `mapping` (`event_id`);
 
 --
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `test`
 --
 ALTER TABLE `test`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `role` (`role`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -485,10 +540,22 @@ ALTER TABLE `orientation_day`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=202;
 
 --
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `test`
 --
 ALTER TABLE `test`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -499,6 +566,12 @@ ALTER TABLE `test`
 --
 ALTER TABLE `dec_geo`
   ADD CONSTRAINT `mapping` FOREIGN KEY (`event_id`) REFERENCES `event_mapping` (`id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `role` FOREIGN KEY (`role`) REFERENCES `roles` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

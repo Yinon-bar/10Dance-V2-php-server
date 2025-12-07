@@ -27,7 +27,7 @@ if ($result->rowCount() > 0) {
   // http_response_code(200);
   echo json_encode(
     [
-      "message" => 'No posts found'
+      "message" => 'לא נמצאו משתתפים לאירוע זה'
     ]
   );
 }
