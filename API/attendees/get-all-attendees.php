@@ -7,6 +7,8 @@ header('Content-Type: application/json');
 include_once '../../config.php/Database.php';
 include_once '../../models/GetAllFromTable.php';
 
+// var_dump($_GET);
+
 $database = new Database();
 $db = $database->connect();
 
