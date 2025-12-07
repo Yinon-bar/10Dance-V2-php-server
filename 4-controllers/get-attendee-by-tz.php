@@ -12,11 +12,11 @@ include_once '../3-logic/server-logic.php';
 $database = new Database();
 $db = $database->connect();
 
-$tableName = $_GET['tableName'];
+$attendeeTz = $_GET['tz'];
 
 $attendees = new Logic($db);
 
-$result = $attendees->getAllFromTable($tableName);
+$result = $attendees->getAttendeeByTz($attendeeTz, "dec_geo");
 
 if ($result->rowCount() > 0) {
   $attendees_arr = [];
@@ -24,7 +24,7 @@ if ($result->rowCount() > 0) {
     array_push($attendees_arr, $row);
   }
 
-  // Torn it into Json
+  // Turn it into Json
   echo json_encode($attendees_arr);
 } else {
   echo json_encode(

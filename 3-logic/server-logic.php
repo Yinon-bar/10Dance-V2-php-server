@@ -96,6 +96,19 @@ class Logic
     return $stmt;
   }
 
+  public function getAttendeeByTz($tz, $tableName)
+  {
+    // print_r($tz);
+    // print_r($tableName);
+    $query = "SELECT * FROM $tableName WHERE tz_id = '$tz'";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    // if ($stmt->rowCount() > 0) {
+
+    return $stmt;
+  }
+
   public function loginUser($user)
   {
     $query = "SELECT * FROM users WHERE user_email = '$user[user_email]' AND user_password = '$user[user_password]'";

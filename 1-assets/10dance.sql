@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2025 at 03:59 PM
+-- Generation Time: Dec 07, 2025 at 10:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `10dance`
 --
-CREATE DATABASE IF NOT EXISTS `10dance` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `10dance`;
 
 -- --------------------------------------------------------
 
@@ -47,7 +45,6 @@ INSERT INTO `dec_geo` (`id`, `tz_id`, `fName`, `lName`, `institute`, `isArrived`
 (1, '300654897', 'אביעד', 'שושנה', 'אוניברסיטת יוטה', 1, 2),
 (2, '200789123', 'יעל', 'פרנקל', 'אוניברסיטת קליפורניה סנטה ברברה', 0, 2),
 (3, '300987456', 'מיכל', 'מלמד', 'אוניברסיטת קרולינה הדרומית', 1, 2),
-(4, '300654897', 'אביעד', 'שושנה', 'אוניברסיטת יוטה', 1, 2),
 (5, '200789123', 'יעל', 'פרנקל', 'אוניברסיטת קליפורניה סנטה ברברה', 0, 2),
 (6, '300987456', 'מיכל', 'מלמד', 'אוניברסיטת קרולינה הדרומית', 1, 2),
 (7, '200234567', 'משה', 'שוורץ', 'אוניברסיטת טקסס הצפונית', 1, 2),
@@ -326,16 +323,17 @@ INSERT INTO `dec_geo` (`id`, `tz_id`, `fName`, `lName`, `institute`, `isArrived`
 
 CREATE TABLE `event_mapping` (
   `id` int(255) NOT NULL,
-  `event_name` varchar(255) NOT NULL
+  `event_name` varchar(255) NOT NULL,
+  `event_table` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `event_mapping`
 --
 
-INSERT INTO `event_mapping` (`id`, `event_name`) VALUES
-(1, 'יום אוריינטציה לעובדים חדשים'),
-(2, 'אירוע גיאוגרפיה');
+INSERT INTO `event_mapping` (`id`, `event_name`, `event_table`) VALUES
+(1, 'יום אוריינטציה לעובדים חדשים', 'orientation_day'),
+(2, 'אירוע גיאוגרפיה', 'dec_geo');
 
 -- --------------------------------------------------------
 
