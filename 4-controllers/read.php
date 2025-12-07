@@ -21,7 +21,7 @@ if ($result->rowCount() > 0) {
     array_push($attendees_arr, $row);
   }
 
-  // Torn it into Json
+  // Turn it into Json
   echo json_encode($attendees_arr);
 } else {
   // http_response_code(200);

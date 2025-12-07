@@ -98,7 +98,7 @@ class Logic
 
   public function loginUser($user)
   {
-    $query = "SELECT * FROM 10dance_users WHERE user_email = '$user[user_email]' AND user_password = '$user[user_password]'";
+    $query = "SELECT * FROM users WHERE user_email = '$user[user_email]' AND user_password = '$user[user_password]'";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
@@ -107,18 +107,18 @@ class Logic
   public function registerUser($user)
   {
     // print_r($user);
-    $query = "SELECT * FROM 10dance_users WHERE user_email = '$user[user_email]'";
+    $query = "SELECT * FROM users WHERE user_email = '$user[user_email]'";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
       return false;
     } else {
-      $insertNewUser = "INSERT INTO 10dance_users (user_name, user_email, user_password, role) VALUES('$user[user_name]', '$user[user_email]', '$user[user_password]', 2)";
+      $insertNewUser = "INSERT INTO users (user_name, user_email, user_password, role) VALUES('$user[user_name]', '$user[user_email]', '$user[user_password]', 2)";
       $stmtNewUser = $this->conn->prepare($insertNewUser);
       $stmtNewUser->execute();
       if ($stmtNewUser->rowCount() > 0) {
-        $query = "SELECT * FROM 10dance_users WHERE user_email = '$user[user_email]'";
+        $query = "SELECT * FROM users WHERE user_email = '$user[user_email]'";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         if ($stmt->execute() > 0) {

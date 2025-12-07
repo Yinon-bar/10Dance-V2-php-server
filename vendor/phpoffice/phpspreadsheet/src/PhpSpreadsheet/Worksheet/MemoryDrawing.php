@@ -62,10 +62,7 @@ class MemoryDrawing extends BaseDrawing
 
     public function __destruct()
     {
-        if ($this->imageResource) {
-            @imagedestroy($this->imageResource);
-            $this->imageResource = null;
-        }
+        $this->imageResource = null;
         $this->worksheet = null;
     }
 
@@ -101,10 +98,8 @@ class MemoryDrawing extends BaseDrawing
             // If the image has transparency...
             $transparent = imagecolortransparent($this->imageResource);
             if ($transparent >= 0) {
+                // Starting with Php8.0, next function throws rather than return false
                 $rgb = imagecolorsforindex($this->imageResource, $transparent);
-                if (empty($rgb)) {
-                    throw new Exception('Could not get image colors');
-                }
 
                 imagesavealpha($clone, true);
                 $color = imagecolorallocatealpha($clone, $rgb['red'], $rgb['green'], $rgb['blue'], $rgb['alpha']);
@@ -217,7 +212,7 @@ class MemoryDrawing extends BaseDrawing
         if (function_exists('getimagesize')) {
             $imageSize = @getimagesize($temporaryFileName);
             if (is_array($imageSize)) {
-                $mimeType = $imageSize['mime'] ?? null; // @phpstan-ignore-line
+                $mimeType = $imageSize['mime'];
 
                 return self::supportedMimeTypes($mimeType);
             }

@@ -346,7 +346,7 @@ class StringHelper
      * see OpenOffice.org's Documentation of the Microsoft Excel File Format, sect. 2.5.3.
      *
      * @param string $textValue UTF-8 encoded string
-     * @param mixed[] $arrcRuns Details of rich text runs in $value
+     * @param array<int, array{strlen: int, fontidx: int}> $arrcRuns Details of rich text runs in $value
      */
     public static function UTF8toBIFF8UnicodeShort(string $textValue, array $arrcRuns = []): string
     {
@@ -646,5 +646,22 @@ class StringHelper
         $v = (float) $textValue;
 
         return (is_numeric(substr($textValue, 0, strlen((string) $v)))) ? $v : $textValue;
+    }
+
+    /**
+     * Php introduced str_increment with Php8.3,
+     * but didn't issue deprecation notices till 8.5.
+     *
+     * @codeCoverageIgnore
+     */
+    public static function stringIncrement(string &$str): string
+    {
+        if (function_exists('str_increment')) {
+            $str = str_increment($str);
+        } else {
+            ++$str;
+        }
+
+        return $str;
     }
 }
