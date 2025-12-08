@@ -13,10 +13,11 @@ $database = new Database();
 $db = $database->connect();
 
 $attendeeTz = $_GET['tz'];
+$tableToSearch = $_GET["table"];
 
 $attendees = new Logic($db);
 
-$result = $attendees->getAttendeeByTz($attendeeTz, "dec_geo");
+$result = $attendees->getAttendeeByTz($attendeeTz, $tableToSearch);
 
 if ($result->rowCount() > 0) {
   $attendees_arr = [];
