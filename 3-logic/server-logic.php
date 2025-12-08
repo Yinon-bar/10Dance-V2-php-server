@@ -71,6 +71,20 @@ class Logic
     }
   }
 
+  public function addNewAttendee($user)
+  {
+    // שם הטבלה מתוך $user
+    $table = $user["event_table"];
+
+    $query = "INSERT INTO $table (tz_id, fName, lName, institute, isArrived, event_id)
+              VALUES ('$user[tz_id]', '$user[first_name]', '$user[last_name]', '$user[institute]', 1, 1)";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+
+    return $stmt;
+  }
+
   public function insertAttendees($data, $fileNamePure, $eventID)
   {
     foreach ($data as $row) {
