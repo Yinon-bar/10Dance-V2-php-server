@@ -21,33 +21,68 @@ class Logic
     return $stmt;
   }
 
-  public function checkEventExisting($eventName)
+  public function checkEventExistingByName(string $eventName): bool
   {
-    $query = "SELECT * FROM event_mapping WHERE event_name = '$eventName'";
-    $stmt = $this->conn->prepare($query);
-    $stmt->execute();
-    if ($stmt->rowCount() > 0) {
-      return true;
-    }
-    return false;
+    $query = "SELECT id FROM events WHERE name = :name LIMIT 1";
+    $stmt  = $this->conn->prepare($query);
+    $stmt->execute([':name' => $eventName]);
+    return (bool) $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function createNewEvent($customTableName)
+  public function createEvent(string $eventName, string $eventTitle): int
   {
-    $query = "CREATE TABLE IF NOT EXISTS $customTableName (
-      id int AUTO_INCREMENT PRIMARY KEY,
-      tz_id varchar(255),
-      fName varchar(255),
-      lName varchar(255),
-      institute varchar(255),
-      isArrived int,
-      event_id int,
-      FOREIGN KEY (event_id) REFERENCES event_mapping(id)
-  )";
+    $query = "
+      INSERT INTO events (name, title, created_at)
+      VALUES (:name, :title, NOW())
+    ";
+
     $stmt = $this->conn->prepare($query);
-    $stmt->execute();
-    return $stmt;
+    $stmt->execute([
+      ':name'  => $eventName,
+      ':title' => $eventTitle,
+    ]);
+
+    return (int) $this->conn->lastInsertId();
   }
+
+  public function insertAttendeesForEvent(array $rows, int $eventId): void
+  {
+    $isFirstRow = true;
+
+    $query = "
+      INSERT INTO attendees (event_id, tz_id, first_name, last_name, institute)
+      VALUES (:event_id, :tz_id, :first_name, :last_name, :institute)
+    ";
+
+    $stmt = $this->conn->prepare($query);
+
+    foreach ($rows as $row) {
+      // דילוג על שורת כותרת
+      if ($isFirstRow) {
+        $isFirstRow = false;
+        continue;
+      }
+
+      $tzId      = trim($row[0] ?? '');
+      $firstName = trim($row[1] ?? '');
+      $lastName  = trim($row[2] ?? '');
+      $institute = trim($row[3] ?? '');
+
+      // אפשר לעשות קצת ולידציה מינימלית
+      if ($tzId === '' || $firstName === '' || $lastName === '') {
+        continue;
+      }
+
+      $stmt->execute([
+        ':event_id'   => $eventId,
+        ':tz_id'      => $tzId,
+        ':first_name' => $firstName,
+        ':last_name'  => $lastName,
+        ':institute'  => $institute,
+      ]);
+    }
+  }
+
 
   public function createNewEventHebName($hebName, $hebTitle, $customTableName)
   {
@@ -89,23 +124,6 @@ class Logic
     $stmt = $this->conn->prepare($query);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
-    return $stmt;
-  }
-
-  public function insertAttendees($data, $fileNamePure, $eventID)
-  {
-    foreach ($data as $row) {
-      $tz_id = $row['0'];
-      $fName = $row['1'];
-      $lName = $row['2'];
-      $institute = $row['3'];
-      $isArrived = $row['4'];
-      $event_id = $eventID;
-
-      $insertAttendeeQuery = "INSERT INTO $fileNamePure (tz_id, fName, lName, institute, isArrived, event_id) VALUES('$tz_id', '$fName', '$lName', '$institute', $isArrived, $event_id)";
-      $stmt = $this->conn->prepare($insertAttendeeQuery);
-      $stmt->execute();
-    }
     return $stmt;
   }
 
