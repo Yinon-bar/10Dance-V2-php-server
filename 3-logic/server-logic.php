@@ -13,9 +13,9 @@ class Logic
     $this->conn = $db;
   }
 
-  public function read()
+  public function getEventsNames()
   {
-    $query = 'SELECT * FROM event_mapping';
+    $query = 'SELECT * FROM events';
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
@@ -108,43 +108,36 @@ class Logic
 
   public function addNewAttendee($user)
   {
-    // שם הטבלה מתוך $user
-    $table = $user["event_table"];
-    $query = "INSERT INTO $table (tz_id, fName, lName, institute, isArrived, event_id)
-              VALUES ('$user[tz_id]', '$user[first_name]', '$user[last_name]', '$user[institute]', 1, 1)";
-
+    $eventId = $user["event_id"];
+    $query = "INSERT INTO attendees (event_id, tz_id, first_name, last_name, institute, is_arrive)
+              VALUES ('$eventId', '$user[tz_id]', '$user[first_name]', '$user[last_name]', '$user[institute]', 1)";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
   }
 
-  public function deleteSingleAttendee($id, $table)
+  public function deleteSingleAttendee($id)
   {
-    $query = "DELETE FROM `$table` WHERE id = :id LIMIT 1";
+    $query = "DELETE FROM attendees WHERE id = :id LIMIT 1";
     $stmt = $this->conn->prepare($query);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt;
   }
 
-  public function getAllFromTable($tableName)
+  public function getAllFromTable($tableId)
   {
-    $query = "SELECT * FROM $tableName";
+    $query = "SELECT * FROM attendees WHERE event_id = $tableId";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
   }
 
-  public function getAttendeeByTz($tz, $tableName)
+  public function getAttendeeByTz($tz)
   {
-    // print_r($tz);
-    // print_r($tableName);
-    $query = "SELECT * FROM $tableName WHERE tz_id = '$tz'";
+    $query = "SELECT * FROM attendees WHERE tz_id = '$tz'";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
-
-    // if ($stmt->rowCount() > 0) {
-
     return $stmt;
   }
 

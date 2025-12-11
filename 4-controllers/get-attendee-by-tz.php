@@ -13,11 +13,10 @@ $database = new Database();
 $db = $database->connect();
 
 $attendeeTz = $_GET['tz'];
-$tableToSearch = $_GET["table"];
 
 $attendees = new Logic($db);
 
-$result = $attendees->getAttendeeByTz($attendeeTz, $tableToSearch);
+$result = $attendees->getAttendeeByTz($attendeeTz);
 
 if ($result->rowCount() > 0) {
   $attendees_arr = [];

@@ -16,25 +16,25 @@ $db = $database->connect();
 $appLogic = new Logic($db);
 $jwtLogic = new JwtLogic();
 
-$dataJson = json_decode(file_get_contents("php://input"));
+$dataJson = json_decode(file_get_contents("php://input")); // חילוץ של ג'ייסון טהור
 
-print_r($dataJson);
+// print_r($dataJson);
 $user = [
   "tz_id" => $dataJson->tzId,
+  "event_id" => $dataJson->eventId,
   "first_name" => $dataJson->fName,
   "last_name" => $dataJson->lName,
   "institute" => $dataJson->institute,
-  "event_table" => $dataJson->eventTable
 ];
 
 $result = $appLogic->addNewAttendee($user);
 
 if ($result->rowCount() > 0) {
-  $authUser = [];
+  $newAttendee = [];
   while ($row = $result->fetch(PDO::FETCH_OBJ)) {
-    array_push($authUser, $row);
+    array_push($newAttendee, $row);
   }
-  echo json_encode($authUser);
+  echo json_encode(["message" => "משתמש נוסף בהצלחה"]);
 } else {
   echo json_encode(
     ["error" => "משתמש לא נמצא"]

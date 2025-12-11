@@ -13,9 +13,8 @@ $database = new Database();
 $db = $database->connect();
 
 $attendeeId = $_GET['id'];
-$tableToSearch = $_GET["table_name"];
 $deleteLogic = new Logic($db);
-$result = $deleteLogic->deleteSingleAttendee($attendeeId, $tableToSearch);
+$result = $deleteLogic->deleteSingleAttendee($attendeeId);
 
 if ($result->rowCount() > 0) {
   $attendees_arr = [];

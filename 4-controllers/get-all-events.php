@@ -13,7 +13,7 @@ $db = $database->connect();
 
 $attendees = new Logic($db);
 
-$result = $attendees->read();
+$result = $attendees->getEventsNames();
 
 if ($result->rowCount() > 0) {
   $attendees_arr = [];

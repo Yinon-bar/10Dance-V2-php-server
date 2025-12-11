@@ -12,11 +12,11 @@ include_once '../3-logic/server-logic.php';
 $database = new Database();
 $db = $database->connect();
 
-$tableName = $_GET['tableName'];
+$tableId = $_GET['tableId'];
 
 $attendees = new Logic($db);
 
-$result = $attendees->getAllFromTable($tableName);
+$result = $attendees->getAllFromTable($tableId);
 
 if ($result->rowCount() > 0) {
   $attendees_arr = [];
