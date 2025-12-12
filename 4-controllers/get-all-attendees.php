@@ -27,9 +27,10 @@ if ($result->rowCount() > 0) {
   // Torn it into Json
   echo json_encode($attendees_arr);
 } else {
+  http_response_code(404);
   echo json_encode(
     [
-      "message" => 'אורח לא נמצא'
+      "message" => 'לא נמצאו רשומות לאירוע זה'
     ]
   );
 }
