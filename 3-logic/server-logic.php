@@ -116,6 +116,28 @@ class Logic
     return $stmt;
   }
 
+  public function updateAttendee($attendee)
+  {
+    // print_r($attendee);
+    $query = "UPDATE attendees
+              SET
+              event_id   = :event_id,
+              tz_id      = :tz_id, 
+              first_name = :first_name,
+              last_name  = :last_name,
+              institute  = :institute
+              WHERE id   = :id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindValue(':event_id',  (int)$attendee['event_id']);
+    $stmt->bindValue(':tz_id', $attendee['tz_id']);
+    $stmt->bindValue(':first_name', $attendee['first_name']);
+    $stmt->bindValue(':last_name',  $attendee['last_name']);
+    $stmt->bindValue(':institute',  $attendee['institute']);
+    $stmt->bindValue(':id', (int)$attendee['id']);
+    $stmt->execute();
+    return $stmt;
+  }
+
   public function deleteSingleAttendee($id)
   {
     $query = "DELETE FROM attendees WHERE id = :id LIMIT 1";
