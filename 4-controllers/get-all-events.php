@@ -16,18 +16,18 @@ $attendees = new Logic($db);
 $result = $attendees->getEventsNames();
 
 if ($result->rowCount() > 0) {
-  $attendees_arr = [];
+  $events_arr = [];
   while ($row = $result->fetch(PDO::FETCH_OBJ)) {
-    array_push($attendees_arr, $row);
+    array_push($events_arr, $row);
   }
 
   // Turn it into Json
-  echo json_encode($attendees_arr);
+  echo json_encode($events_arr);
 } else {
-  // http_response_code(200);
+  http_response_code(404);
   echo json_encode(
     [
-      "message" => 'לא נמצאו משתתפים לאירוע זה'
+      "message" => 'לא נמצאו אירועים'
     ]
   );
 }

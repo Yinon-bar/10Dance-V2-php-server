@@ -6,10 +6,18 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 
 class Database
 {
+  // localhost
+  // private $dbhost = "localhost";
+  // private $dbuser = "root";
+  // private $dbpassword = "";
+  // private $dbname = "10dance";
+  // private $connection;
+
+  // שרת אמיתי
   private $dbhost = "localhost";
-  private $dbuser = "root";
-  private $dbpassword = "";
-  private $dbname = "10dance";
+  private $dbuser = "u528206822_inon";
+  private $dbpassword = "INONbar@053508384";
+  private $dbname = "u528206822_10dance";
   private $connection;
 
   public function connect()
