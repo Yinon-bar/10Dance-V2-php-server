@@ -2,12 +2,19 @@
 
 class Database
 {
-  private PDO $connection;
+  private $connection;
 
-  public function connect(): PDO
+  public function connect()
   {
-    // טוען קונפיג (מחוץ ל-public_html או מוגן עם .htaccess)
-    $config = require __DIR__ . '../../db.php';
+    // /home/.../public_html  => dirname => /home/.../
+    $rootAbovePublic = dirname($_SERVER['DOCUMENT_ROOT']);
+    $configPath = $rootAbovePublic . '/db.php';
+
+    if (!file_exists($configPath)) {
+      throw new Exception("DB config file not found: " . $configPath);
+    }
+
+    $config = require $configPath;
 
     $host = $config['DB_HOST'];
     $db   = $config['DB_NAME'];
@@ -16,11 +23,6 @@ class Database
     $charset = $config['DB_CHARSET'] ?? 'utf8mb4';
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-
-    if (!is_array($config)) {
-      throw new Exception("DB config not loaded");
-    }
-
 
     $options = [
       PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
