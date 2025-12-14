@@ -1,36 +1,40 @@
 <?php
 
+header("Access-Control-Allow-Origin: *"); // Allow requests from any origin
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allow the specified methods
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization"); // Allow the specified headers
+
 class Database
 {
+  // localhost
+  // private $dbhost = "localhost";
+  // private $dbuser = "root";
+  // private $dbpassword = "";
+  // private $dbname = "10dance";
+  // private $connection;
+
+  // שרת אמיתי
+  private $dbhost = "srv1048.hstgr.io";
+  private $dbuser = "u528206822_inon";
+  private $dbpassword = "INONbar@053508384";
+  private $dbname = "u528206822_10dance";
   private $connection;
 
   public function connect()
   {
-    // /home/.../public_html  => dirname => /home/.../
-    $rootAbovePublic = dirname($_SERVER['DOCUMENT_ROOT']);
-    $configPath = $rootAbovePublic . '/db.php';
-
-    if (!file_exists($configPath)) {
-      throw new Exception("DB config file not found: " . $configPath);
-    }
-
-    $config = require $configPath;
-
+    // טעינת פרטי החיבור מתוך קובץ ENV בשרת
+    $config = require __DIR__ . '/../../private/db.php';
     $host = $config['DB_HOST'];
     $db   = $config['DB_NAME'];
     $user = $config['DB_USER'];
     $pass = $config['DB_PASS'];
-    $charset = $config['DB_CHARSET'] ?? 'utf8mb4';
-
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-
-    $options = [
-      PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-      PDO::ATTR_EMULATE_PREPARES   => false,
-    ];
-
-    $this->connection = new PDO($dsn, $user, $pass, $options);
+    $this->connection = null;
+    try {
+      $this->connection = new PDO('mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname, $this->dbuser, $this->dbpassword);
+      $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $error) {
+      echo 'Connection error: ' . $error->getMessage();
+    }
     return $this->connection;
   }
 }
