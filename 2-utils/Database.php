@@ -7,7 +7,7 @@ class Database
   public function connect(): PDO
   {
     // טוען קונפיג (מחוץ ל-public_html או מוגן עם .htaccess)
-    $config = require __DIR__ . '/../../db.php';
+    $config = require __DIR__ . '../../db.php';
 
     $host = $config['DB_HOST'];
     $db   = $config['DB_NAME'];
