@@ -18,7 +18,7 @@ class Logic
     $query = 'SELECT * FROM events';
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_OBJ); // תמיד מערך
+    return $stmt;
   }
 
   public function checkEventExistingByName(string $eventName): bool
