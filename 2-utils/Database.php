@@ -15,14 +15,16 @@ class Database
 
   public function connect()
   {
-    $local = __DIR__ . "/config.php";
-    file_exists($local)
-      ? require $local
-      // : require __DIR__ . '/../../config.php';
-      : require dirname(__DIR__, 2) . '/config.php';
+    $localConfig = __DIR__ . '/config.php';                 // /public_html/2-utils/config.php
+    $prodConfig  = dirname(__DIR__, 2) . '/config.php';     // /domains/.../config.php
+    $configPath = file_exists($localConfig) ? $localConfig : $prodConfig;
 
+    if (!file_exists($configPath)) {
+      throw new RuntimeException("config.php not found at: $configPath");
+    }
+
+    $config = require $configPath;
     // טעינת פרטי החיבור מתוך קובץ config.php
-    $config = require $local;
     $host = $config['dbhost'];
     $db   = $config['dbname'];
     $user = $config['dbuser'];
