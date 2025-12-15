@@ -23,9 +23,8 @@ class Database
       throw new RuntimeException("config.php not found at: $configPath");
     }
 
-
-    $config = require $configPath;
     // טעינת פרטי החיבור מתוך קובץ config.php
+    $config = require $configPath;
     $host = $config['dbhost'];
     $db   = $config['dbname'];
     $user = $config['dbuser'];
