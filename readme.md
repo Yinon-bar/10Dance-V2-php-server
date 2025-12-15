@@ -131,8 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     "date": "2025-01-01"
   }
 ]
-<div dir="ltr">
-
 ```
 
 ---
