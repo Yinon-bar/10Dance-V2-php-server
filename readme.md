@@ -161,8 +161,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   "institute": "Institute name",
   "eventTable": "event_1"
 }
-<div dir="ltr">
-
 ```
 
 ---
@@ -187,8 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ```json
 { "error": "message" }
-<div dir="ltr">
-
 ```
 
 ---
@@ -203,7 +199,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 ```env
 VITE_API_URL=http://localhost/10dance-api
-<div dir="ltr">
 
 ```
 
