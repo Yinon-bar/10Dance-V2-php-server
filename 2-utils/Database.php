@@ -18,7 +18,8 @@ class Database
     $local = __DIR__ . "/config.php";
     file_exists($local)
       ? require $local
-      : require __DIR__ . '/../../config.php';
+      // : require __DIR__ . '/../../config.php';
+      : require dirname(__DIR__, 2) . '/config.php';
 
     // טעינת פרטי החיבור מתוך קובץ config.php
     $config = require $local;
