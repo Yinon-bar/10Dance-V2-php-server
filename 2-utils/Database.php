@@ -27,7 +27,6 @@ class Database
     $user = $config['dbuser'];
     $pass = $config['dbpassword'];
 
-    print_r($host);
     try {
       $connection = new PDO('mysql:host=' . $host . ';dbname=' . $db, $user, $pass);
       $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
