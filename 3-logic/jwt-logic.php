@@ -14,9 +14,7 @@ class JwtLogic
   // Create secret key
   private $secret_key = "owt125";
 
-  public function __construct()
-  {
-  }
+  public function __construct() {}
 
   public function createJWTtoken($authUser)
   {
@@ -29,30 +27,34 @@ class JwtLogic
       "exp" => time() + 259200,
       "aud" => "myusers",
       "data" => array(
-        "id" => $authUser[0]["id"],
-        "name" => $authUser[0]["user_name"],
-        "email" => $authUser[0]["user_email"],
-        "role" => $authUser[0]["role"]
+        "id" => $authUser["id"],
+        "name" => $authUser["user_name"],
+        "email" => $authUser["user_email"],
+        "role" => $authUser["role"]
       )
     ];
 
     // Generate JWT token
     $jwt = JWT::encode($payload_info, $this->secret_key, "HS256");
-    array_push($authUser, array("jwt" => $jwt));
+    $authUser["jwt"] = $jwt;
     return ($authUser);
   }
 
-  public function validateJWTtoken($jwt)
+  public function getBearerToken(): ?string
   {
-    try {
-      $decoded = JWT::decode($jwt, new Key($this->secret_key, 'HS256'));
-      // If decoding successful, return decoded token
-      // print_r($decoded);
-      return ($decoded);
-    } catch (Exception $e) {
-      // If decoding failed (invalid token), return false
-      echo $e;
-      return false;
-    }
+    $headers = getallheaders();
+    $auth = $headers["Authorization"] ?? $headers["authorization"] ?? null;
+    if (!$auth) return null;
+    // מצפה לפורמט: "Bearer TOKEN"
+    // פונקציה שמחזירה מערך שיופרד לאיברים ע"י ההגדרה " " שם סטרינג שיש לבצע עליו את הפונקציה - פרמטר שני
+    $parts = explode(" ", $auth);
+    // אנחנו אמורים לקבל מערך כזה
+    // ["Bearer", "eyJhbGciOiJIUzI1NiJ9"]
+    // אם לא קיבלנו 2 איברים יש להחזיר נאל כי משהו לא תקין
+    if (count($parts) !== 2) return null;
+    // אם החלק הראשון לא שווה ל ברר יש להחזיר נאל
+    if ($parts[0] !== "Bearer") return null;
+
+    return $parts[1];
   }
 }
