@@ -21,21 +21,18 @@ $dataJson = json_decode(file_get_contents("php://input"));
 $user = ["user_email" => $dataJson->user_email, "user_password" => $dataJson->user_password];
 // $userJWT = $dataJson->jwt;
 
-$result = $appLogic->loginUser($user);
+try {
+  $result = $appLogic->loginUser($user);
+  $row = $result->fetch(PDO::FETCH_ASSOC);
 
-if ($result->rowCount() > 0) {
-  $authUser = [];
-  while ($row = $result->fetch(PDO::FETCH_OBJ)) {
-    array_push($authUser, $row);
+  if ($row) {
+    print_r($row);
+  } else {
+    // משתמש לא נמצא
   }
-  // print_r($authUser);
-  // $authUser = $jwtLogic->validateJWTtoken($userJWT);
-  // Turn it into Json
-  // print_r($authUser);
-  echo json_encode($authUser);
-} else {
-  echo json_encode(
-    ["error" => "משתמש לא נמצא"]
-  );
-  // http_response_code(401);
+} catch (PDOException $e) {
+  http_response_code(500);
+  echo json_encode([
+    "error" => "שגיאת שרת"
+  ]);
 }
