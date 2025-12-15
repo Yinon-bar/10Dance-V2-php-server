@@ -13,28 +13,27 @@ class Database
   // private $dbname = "10dance";
   // private $connection;
 
-  // שרת אמיתי
-  private $dbhost = "srv1048.hstgr.io";
-  private $dbuser = "u528206822_inon";
-  private $dbpassword = "INONbar@053508384";
-  private $dbname = "u528206822_10dance";
-  private $connection;
-
   public function connect()
   {
-    // טעינת פרטי החיבור מתוך קובץ ENV בשרת
-    $config = require __DIR__ . '/../../private/db.php';
-    $host = $config['DB_HOST'];
-    $db   = $config['DB_NAME'];
-    $user = $config['DB_USER'];
-    $pass = $config['DB_PASS'];
-    $this->connection = null;
+    $local = __DIR__ . "/config.php";
+    file_exists($local)
+      ? require $local
+      : require __DIR__ . '/../../config.php';
+
+    // טעינת פרטי החיבור מתוך קובץ config.php
+    $config = require $local;
+    $host = $config['dbhost'];
+    $db   = $config['dbname'];
+    $user = $config['dbuser'];
+    $pass = $config['dbpassword'];
+
+    print_r($host);
     try {
-      $this->connection = new PDO('mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname, $this->dbuser, $this->dbpassword);
-      $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $connection = new PDO('mysql:host=' . $host . ';dbname=' . $db, $user, $pass);
+      $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $error) {
       echo 'Connection error: ' . $error->getMessage();
     }
-    return $this->connection;
+    return $connection;
   }
 }
