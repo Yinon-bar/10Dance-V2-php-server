@@ -31,9 +31,10 @@ try {
 
   $eventName  = trim($_POST['eventName']);
   $eventTitle = trim($_POST['eventTitle']);
+  $institute = trim($_POST['institute']);
 
-  if ($eventName === '' || $eventTitle === '') {
-    throw new Exception("eventName and eventTitle cannot be empty");
+  if ($eventName === '' || $eventTitle === '' || $institute === '') {
+    throw new Exception("eventName, eventTitle and institute cannot be empty");
   }
 
   // בדיקה אם יש כבר אירוע בשם הזה
@@ -42,17 +43,21 @@ try {
   }
 
   // יוצרים אירוע חדש
-  $eventId = $dbLogic->createEvent($eventName, $eventTitle);
+  $eventId = $dbLogic->createEvent($eventName, $eventTitle, $institute);
   // במידה והכל תקין מעדכנים את מערך ההודעה
-  $response["message"]  = "Event and attendees created successfully";
+  $response["message"]  = "האירוע נוצר בהצלחה";
   $response["status"]   = true;
   $response["event_id"] = $eventId;
+  // print_r($eventId);
+
   // בדיקת קובץ
   // if (!isset($_FILES['eventTable']) || $_FILES['eventTable']['error'] !== UPLOAD_ERR_OK) {
   //   throw new Exception("Excel file (eventTable) is required");
   // }
-
-  if (!isset($_FILES['eventTable'])) {
+  // לא חייב לפתוח אירוע עם קובץ אקסל מוכן, אפשר לפתוח אירוע ולהכניס את הנוכחים רק אח"כ
+  if (isset($_FILES['eventTable'])) {
+    // print_r(["The event id is:" => $eventId]);
+    // exit;
     $fileInfo    = $_FILES['eventTable'];
     $fileName    = $fileInfo['name'];
     $fileTmpPath = $fileInfo['tmp_name'];
@@ -70,12 +75,11 @@ try {
     // מכניסים את הנוכחים
     $dbLogic->insertAttendeesForEvent($data, $eventId);
 
-    $response["message"]  = "Event and attendees created successfully";
+    $response["message"]  = "יצירת האירוע ושיוך הנוכחים הסתיים בהצלחה";
+    // החזרת JSON
   }
 } catch (Exception $e) {
   $response["status"]  = false;
   $response["message"] = $e->getMessage();
 }
-
-// החזרת JSON
-echo json_encode($response, JSON_UNESCAPED_UNICODE);
+echo json_encode($response);

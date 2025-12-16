@@ -29,20 +29,19 @@ class Logic
     return (bool) $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function createEvent(string $eventName, string $eventTitle): int
+  public function createEvent(string $eventName, string $eventTitle, string $institute): int
   {
     $query = "
-      INSERT INTO events (name, title, created_at)
-      VALUES (:name, :title, NOW())
+      INSERT INTO events (name, title, institute, created_at)
+      VALUES (:name, :title, :institute, NOW())
     ";
-
     $stmt = $this->conn->prepare($query);
     $stmt->execute([
       ':name'  => $eventName,
       ':title' => $eventTitle,
+      ':institute' => $institute,
     ]);
-
-    return (int) $this->conn->lastInsertId();
+    return (int) $lastId = $this->conn->lastInsertId();
   }
 
   public function insertAttendeesForEvent(array $rows, int $eventId): void
