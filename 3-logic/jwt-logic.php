@@ -40,6 +40,12 @@ class JwtLogic
     return ($authUser);
   }
 
+  function decodeJwt(string $jwt): object
+  {
+    // אם אתה משתמש ב-HS256:
+    return JWT::decode($jwt, new Key($this->secret_key, 'HS256'));
+  }
+
   public function getBearerToken(): ?string
   {
     $headers = getallheaders();

@@ -181,7 +181,7 @@ class Logic
     if ($stmt->rowCount() > 0) {
       return false;
     } else {
-      $insertNewUser = "INSERT INTO users (user_name, user_email, user_password, role) VALUES('$user[user_name]', '$user[user_email]', '$user[user_password]', 2)";
+      $insertNewUser = "INSERT INTO users (user_name, user_email, user_password, role, institute_id) VALUES('$user[user_name]', '$user[user_email]', '$user[user_password]', 2, '$user[institute_id]')";
       $stmtNewUser = $this->conn->prepare($insertNewUser);
       $stmtNewUser->execute();
       if ($stmtNewUser->rowCount() > 0) {
