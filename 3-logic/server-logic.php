@@ -147,6 +147,15 @@ class Logic
     return $stmt;
   }
 
+  public function deleteSingleEvent($id)
+  {
+    $query = "DELETE FROM events WHERE id = :id LIMIT 1";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt;
+  }
+
   public function getAllFromTable($tableId)
   {
     $query = "SELECT * FROM attendees WHERE event_id = $tableId";

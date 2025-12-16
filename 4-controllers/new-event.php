@@ -41,35 +41,37 @@ try {
     throw new Exception("Event already exists");
   }
 
-  // בדיקת קובץ
-  if (!isset($_FILES['eventTable']) || $_FILES['eventTable']['error'] !== UPLOAD_ERR_OK) {
-    throw new Exception("Excel file (eventTable) is required");
-  }
-
-  $fileInfo    = $_FILES['eventTable'];
-  $fileName    = $fileInfo['name'];
-  $fileTmpPath = $fileInfo['tmp_name'];
-  $fileExt     = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-  $allowedExtensions = ['xls', 'xlsx', 'csv'];
-
-  if (!in_array($fileExt, $allowedExtensions)) {
-    throw new Exception("Invalid file type. Allowed: xls, xlsx, csv");
-  }
-
   // יוצרים אירוע חדש
   $eventId = $dbLogic->createEvent($eventName, $eventTitle);
-
-  // טוענים את האקסל
-  $spreadsheet = IOFactory::load($fileTmpPath);
-  $data        = $spreadsheet->getActiveSheet()->toArray();
-
-  // מכניסים את הנוכחים
-  $dbLogic->insertAttendeesForEvent($data, $eventId);
-
-  $response["status"]   = true;
+  // במידה והכל תקין מעדכנים את מערך ההודעה
   $response["message"]  = "Event and attendees created successfully";
+  $response["status"]   = true;
   $response["event_id"] = $eventId;
+  // בדיקת קובץ
+  // if (!isset($_FILES['eventTable']) || $_FILES['eventTable']['error'] !== UPLOAD_ERR_OK) {
+  //   throw new Exception("Excel file (eventTable) is required");
+  // }
+
+  if (!isset($_FILES['eventTable'])) {
+    $fileInfo    = $_FILES['eventTable'];
+    $fileName    = $fileInfo['name'];
+    $fileTmpPath = $fileInfo['tmp_name'];
+    $fileExt     = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+    $allowedExtensions = ['xls', 'xlsx', 'csv'];
+
+    if (!in_array($fileExt, $allowedExtensions)) {
+      throw new Exception("Invalid file type. Allowed: xls, xlsx, csv");
+    }
+
+    // טוענים את האקסל
+    $spreadsheet = IOFactory::load($fileTmpPath);
+    $data        = $spreadsheet->getActiveSheet()->toArray();
+
+    // מכניסים את הנוכחים
+    $dbLogic->insertAttendeesForEvent($data, $eventId);
+
+    $response["message"]  = "Event and attendees created successfully";
+  }
 } catch (Exception $e) {
   $response["status"]  = false;
   $response["message"] = $e->getMessage();
