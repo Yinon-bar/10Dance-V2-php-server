@@ -20,7 +20,6 @@ $appLogic = new Logic($db);
 
 $eventId = $_GET['id'];
 $result = $appLogic->deleteSingleEvent($eventId);
-print_r($result->rowCount());
 // exit;
 if ($result->rowCount() === 0) {
   http_response_code(404);

@@ -4,15 +4,15 @@ header("Access-Control-Allow-Origin: *"); // Allow requests from any origin
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allow the specified methods
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization"); // Allow the specified headers
 
-include_once '../2-utils/Database.php';
-include_once '../3-logic/server-logic.php';
-include_once '../3-logic/jwt-logic.php';
-include_once '../vendor/autoload.php';
-
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   http_response_code(200);
   exit;
 }
+
+include_once '../2-utils/Database.php';
+include_once '../3-logic/server-logic.php';
+include_once '../3-logic/jwt-logic.php';
+include_once '../vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 
