@@ -39,7 +39,8 @@ try {
 
   // בדיקה אם יש כבר אירוע בשם הזה
   if ($dbLogic->checkEventExistingByName($eventName)) {
-    throw new Exception("Event already exists");
+    $response['status'] = 409;
+    throw new Exception("אירוע עם שם זה כבר קיים במערכת - אנא בחר שם אחר");
   }
 
   // יוצרים אירוע חדש
@@ -56,8 +57,6 @@ try {
   // }
   // לא חייב לפתוח אירוע עם קובץ אקסל מוכן, אפשר לפתוח אירוע ולהכניס את הנוכחים רק אח"כ
   if (isset($_FILES['eventTable'])) {
-    // print_r(["The event id is:" => $eventId]);
-    // exit;
     $fileInfo    = $_FILES['eventTable'];
     $fileName    = $fileInfo['name'];
     $fileTmpPath = $fileInfo['tmp_name'];
@@ -74,12 +73,12 @@ try {
 
     // מכניסים את הנוכחים
     $dbLogic->insertAttendeesForEvent($data, $eventId);
-
+    $response["status"] = 201;
     $response["message"]  = "יצירת האירוע ושיוך הנוכחים הסתיים בהצלחה";
     // החזרת JSON
   }
 } catch (Exception $e) {
-  $response["status"]  = false;
+  http_response_code($response["status"]);
   $response["message"] = $e->getMessage();
 }
 echo json_encode($response);
