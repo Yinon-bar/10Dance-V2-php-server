@@ -7,6 +7,11 @@ header('Content-Type: application/json');
 include_once '../2-utils/Database.php';
 include_once '../3-logic/server-logic.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  http_response_code(200);
+  exit;
+}
+
 // var_dump($_GET);
 
 $database = new Database();

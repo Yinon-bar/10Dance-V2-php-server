@@ -9,6 +9,11 @@ include_once '../3-logic/server-logic.php';
 include_once '../3-logic/jwt-logic.php';
 include_once '../vendor/autoload.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  http_response_code(200);
+  exit;
+}
+
 use \Firebase\JWT\JWT;
 
 $database = new Database();

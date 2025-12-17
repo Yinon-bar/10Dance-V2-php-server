@@ -10,6 +10,11 @@ include_once '../3-logic/server-logic.php';
 // תוסף לעבודה עם קבצי אקסל
 require "../vendor/autoload.php";
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  http_response_code(200);
+  exit;
+}
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 $database = new Database();

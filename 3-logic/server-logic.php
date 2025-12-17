@@ -148,7 +148,7 @@ class Logic
 
   public function deleteSingleEvent($id)
   {
-    $query = "DELETE FROM events WHERE id = :id LIMIT 1";
+    $query = "DELETE FROM events WHERE id = :id";
     $stmt = $this->conn->prepare($query);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
