@@ -137,6 +137,24 @@ class Logic
     return $stmt;
   }
 
+  public function updateEvent($event)
+  {
+    // print_r($attendee);
+    $query = "UPDATE events
+              SET
+              name = :name,
+              title  = :title,
+              institute  = :institute
+              WHERE id   = :id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindValue(':name',  $event['name']);
+    $stmt->bindValue(':title',  $event['title']);
+    $stmt->bindValue(':institute',  $event['institute']);
+    $stmt->bindValue(':id', (int)$event['id']);
+    $stmt->execute();
+    return $stmt;
+  }
+
   public function deleteSingleAttendee($id)
   {
     $query = "DELETE FROM attendees WHERE id = :id LIMIT 1";
