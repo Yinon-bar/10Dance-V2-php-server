@@ -140,7 +140,10 @@ class Logic
     $stmt->bindValue(':institute',  $attendee['institute']);
     $stmt->bindValue(':id', (int)$attendee['id']);
     $stmt->execute();
-    return $stmt;
+
+    $stmt2 = $this->conn->prepare("SELECT * FROM attendees WHERE id = :id");
+    $stmt2->execute([":id" => $attendee['id']]);
+    return $stmt2;
   }
 
   public function updateEvent($event)

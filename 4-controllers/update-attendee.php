@@ -61,7 +61,7 @@ if ($result->rowCount() > 0) {
   }
   // print_r($apdatedAttendee);
   http_response_code(200);
-  echo json_encode(["message" => "משתמש עודכן בהצלחה"]);
+  echo json_encode(["message" => "משתמש עודכן בהצלחה", "data" => $apdatedAttendee]);
 } else {
   http_response_code(404);
   echo json_encode(
