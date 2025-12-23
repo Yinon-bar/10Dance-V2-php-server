@@ -38,6 +38,13 @@ if (!$user) {
   ]);
   exit;
 }
+
+// שלב 2.1: יצירת token אקראי וחזק
+$rawToken = bin2hex(random_bytes(32)); // token למייל
+$tokenHash = hash('sha256', $rawToken); // מה שנשמור ב-DB
+
+// תוקף (נניח 15 דקות)
+$expiresAt = date("Y-m-d H:i:s", time() + (15 * 60));
 // שלב 3: תמיד להחזיר תשובה גנרית (גם אם לא קיים משתמש)
 http_response_code(200);
 echo json_encode([
