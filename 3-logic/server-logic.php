@@ -112,7 +112,13 @@ class Logic
               VALUES ('$eventId', '$user[tz_id]', '$user[first_name]', '$user[last_name]', '$user[institute]', 1)";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
-    return $stmt;
+
+    $newId = $this->conn->lastInsertId();
+
+    $stmt2 = $this->conn->prepare("SELECT * FROM attendees WHERE id = :id");
+    $stmt2->execute([":id" => $newId]);
+
+    return $stmt2;
   }
 
   public function updateAttendee($attendee)

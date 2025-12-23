@@ -34,15 +34,12 @@ $user = [
 
 $result = $appLogic->addNewAttendee($user);
 
-if ($result->rowCount() > 0) {
-  $newAttendee = [];
-  while ($row = $result->fetch(PDO::FETCH_OBJ)) {
-    array_push($newAttendee, $row);
-  }
-  echo json_encode(["message" => "משתמש נוסף בהצלחה"]);
+$row = $result->fetch(PDO::FETCH_OBJ);
+
+if ($row) {
+  http_response_code(201);
+  echo json_encode(["message" => "משתמש נוסף בהצלחה", "data" => $row]);
 } else {
-  echo json_encode(
-    ["error" => "משתמש לא נמצא"]
-  );
-  // http_response_code(401);
+  http_response_code(500);
+  echo json_encode(["error" => "המשתמש נוצר אבל לא הצלחתי לשלוף אותו"]);
 }
