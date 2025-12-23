@@ -28,13 +28,19 @@ if (!isset($data->email) || !filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
 
 $email = strtolower(trim($data->email));
 
-if ($userObj->data->role !== 3) {
-  http_response_code(403);
-  echo json_encode(["error" => "אינך מורשה לבצע פעולה זו"]);
+$user = $appLogic->getUserByEmail($email);
+
+// אם אין משתמש – לא עושים כלום מיוחד (אבטחה)
+if (!$user) {
+  http_response_code(200);
+  echo json_encode([
+    "message" => "אם המייל קיים במערכת, נשלח קישור לאיפוס סיסמה"
+  ]);
   exit;
 }
-// שלב רביעי ואחרון יש ליצור את האדמין החדש
-try {
-} catch (\Throwable $th) {
-  throw $th;
-}
+// שלב 3: תמיד להחזיר תשובה גנרית (גם אם לא קיים משתמש)
+http_response_code(200);
+echo json_encode([
+  "message" => "אם המייל קיים במערכת, נשלח קישור לאיפוס סיסמה"
+]);
+exit;

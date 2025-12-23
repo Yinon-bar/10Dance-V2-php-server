@@ -82,7 +82,6 @@ class Logic
     }
   }
 
-
   public function createNewEventHebName($hebName, $hebTitle, $customTableName)
   {
     $checkExistingQuery = "SELECT * FROM event_mapping WHERE event_name = '$hebName'";
@@ -195,6 +194,14 @@ class Logic
     $query = "SELECT * FROM attendees WHERE tz_id = '$tz'";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
+    return $stmt;
+  }
+
+  public function getUserByEmail($userEmail)
+  {
+    $query = "SELECT * FROM users WHERE user_email = :userEmail";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute([":userEmail" => $userEmail]);
     return $stmt;
   }
 
