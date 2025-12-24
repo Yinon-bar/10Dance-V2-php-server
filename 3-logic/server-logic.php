@@ -207,9 +207,9 @@ class Logic
 
   public function loginUser($user)
   {
-    $query = "SELECT * FROM users WHERE user_email = '$user[user_email]' AND user_password = '$user[user_password]'";
+    $query = "SELECT * FROM users WHERE user_email = :email LIMIT 1 ";
     $stmt = $this->conn->prepare($query);
-    $stmt->execute();
+    $stmt->execute([":email" => $user["user_email"]]);
     return $stmt;
   }
 

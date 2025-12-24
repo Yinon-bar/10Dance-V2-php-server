@@ -22,7 +22,6 @@ $appLogic = new Logic($db);
 $jwtLogic = new JwtLogic();
 
 $dataJson = json_decode(file_get_contents("php://input"));
-// print_r($dataJson->user_email);
 $user = ["user_email" => $dataJson->user_email, "user_password" => $dataJson->user_password];
 // $userJWT = $dataJson->jwt;
 
@@ -31,7 +30,6 @@ try {
   $row = $result->fetch(PDO::FETCH_ASSOC);
 
   if ($row) {
-    // print_r($row);
     $authUser = $jwtLogic->createJWTtoken($row);
     // print_r($authUser);
     http_response_code(201);
