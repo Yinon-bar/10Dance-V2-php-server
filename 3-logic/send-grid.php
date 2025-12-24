@@ -11,7 +11,7 @@ class MailService
   public function __construct($config)
   {
     $this->apiKey = $config["SENDGRID_API_KEY"];
-    $this->fromEmail = $config["MAIL_FROM_EMAIL"] ?? "no-reply@your-domain.com";
+    $this->fromEmail = $config["MAIL_FROM_EMAIL"] ?? "yinonbar1988@gmail.com";
     $this->fromName = $config["MAIL_FROM_NAME"] ?? "10Dance";
   }
 
@@ -42,5 +42,6 @@ class MailService
       error_log("MailService error: " . $e->getMessage());
       return false;
     }
+    $response = $sendgrid->send($mail);
   }
 }
