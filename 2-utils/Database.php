@@ -18,8 +18,8 @@ class Database
     // שלב 1. יש להשיג את פרטי החיבור לדאטהבייס בגלל שאנחנו בפרודקשן
     // אסור לשים פה את הפרטי חיבור ולכן יש להכניס אותם לקובץ נפרד
     // בפרודקשן הקובץ נמצא במיקום מסויים ובסביבה הלוקאלית הוא נמצא במיקום אחר
-    $localConfig = __DIR__ . '/config.php';                 // /public_html/2-utils/config.php
-    $prodConfig  = dirname(__DIR__, 2) . '/config.php';     // /domains/.../config.php
+    $localConfig = __DIR__ . '/config.php';              // C:\xampp\htdocs\10Dance-V2-php-server\2-utils/config.php  
+    $prodConfig  = dirname(__DIR__, 2) . '/config.php';  // /domains/.../config.php  
     $configPath = file_exists($localConfig) ? $localConfig : $prodConfig;
 
     // יש לוודא שאחד מהקבצים נמצא
