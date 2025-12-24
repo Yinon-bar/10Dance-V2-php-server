@@ -23,16 +23,11 @@ class MailService
       $email->setSubject("איפוס סיסמה");
       $email->addTo($toEmail);
 
-      $email->addContent(
-        "text/plain",
-        "לאיפוס הסיסמה לחץ על הקישור:\n{$resetLink}"
-      );
+      $email->setTemplateId("d-159b1cfa907748d89c28accafee6b874");
 
-      $email->addContent(
-        "text/html",
-        "<p>לאיפוס הסיסמה לחץ על הקישור:</p>
-          <p><a href='{$resetLink}'>איפוס סיסמה</a></p>"
-      );
+      $email->addDynamicTemplateDatas([
+        "reset_link" => $resetLink
+      ]);
 
       $sendgrid = new \SendGrid($this->apiKey);
       $response = $sendgrid->send($email);
