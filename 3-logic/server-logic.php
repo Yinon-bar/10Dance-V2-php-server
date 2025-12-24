@@ -202,7 +202,7 @@ class Logic
     $query = "SELECT * FROM users WHERE user_email = :userEmail";
     $stmt = $this->conn->prepare($query);
     $stmt->execute([":userEmail" => $userEmail]);
-    return $stmt;
+    return $stmt->fetch(PDO::FETCH_OBJ);
   }
 
   public function loginUser($user)
@@ -238,5 +238,22 @@ class Logic
       }
       return false;
     }
+  }
+  public function savePasswordResetForUser($userId, $tokenHash, $expiresAt)
+  {
+    $query = "UPDATE users
+              SET reset_token_hash = :token_hash,
+                  reset_expires_at = :expires_at
+              WHERE id = :id
+              LIMIT 1";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute([
+      ":token_hash" => $tokenHash,
+      ":expires_at" => $expiresAt,
+      ":id" => $userId
+    ]);
+
+    return $stmt->rowCount() > 0;
   }
 }

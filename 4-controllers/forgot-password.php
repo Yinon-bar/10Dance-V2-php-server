@@ -8,6 +8,7 @@ include_once '../2-utils/Database.php';
 include_once '../3-logic/server-logic.php';
 include_once '../3-logic/jwt-logic.php';
 include_once '../vendor/autoload.php';
+include_once './2-utils/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   http_response_code(200);
@@ -45,6 +46,24 @@ $tokenHash = hash('sha256', $rawToken); // מה שנשמור ב-DB
 
 // תוקף (נניח 15 דקות)
 $expiresAt = date("Y-m-d H:i:s", time() + (15 * 60));
+
+$appLogic->savePasswordResetForUser($user->id, $tokenHash, $expiresAt);
+
+// בדיקה זמנית
+// http_response_code(200);
+// echo json_encode([
+//   "message" => "reset token saved (debug)",
+//   "debug_token" => $rawToken,
+//   "expires_at" => $expiresAt
+// ]);
+// exit;
+
+// בניית קישור עם ה טוקן
+$frontendUrl = rtrim($config["FRONTEND_URL"], "/");
+$resetLink = $frontendUrl . "/reset-password?token=" . urlencode($rawToken);
+
+
+
 // שלב 3: תמיד להחזיר תשובה גנרית (גם אם לא קיים משתמש)
 http_response_code(200);
 echo json_encode([
