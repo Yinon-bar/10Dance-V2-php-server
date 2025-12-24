@@ -30,7 +30,6 @@ if (!isset($data->email) || !filter_var($data->email, FILTER_VALIDATE_EMAIL)) {
 }
 
 $email = strtolower(trim($data->email));
-
 $user = $appLogic->getUserByEmail($email);
 
 // אם אין משתמש – לא עושים כלום מיוחד (אבטחה)
@@ -47,8 +46,7 @@ $rawToken = bin2hex(random_bytes(32)); // token למייל
 $tokenHash = hash('sha256', $rawToken); // מה שנשמור ב-DB
 
 // תוקף (נניח 15 דקות)
-$expiresAt = date("Y-m-d H:i:s", time() + (15 * 60));
-
+$expiresAt = date("Y-m-d H:i:s", time() + (30 * 60));
 $appLogic->savePasswordResetForUser($user->id, $tokenHash, $expiresAt);
 
 // בניית קישור עם ה טוקן

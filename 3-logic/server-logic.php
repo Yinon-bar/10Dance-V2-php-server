@@ -243,17 +243,46 @@ class Logic
   {
     $query = "UPDATE users
               SET reset_token_hash = :token_hash,
-                  reset_expires_at = :expires_at
+                  reset_expires_at = DATE_ADD(NOW(), INTERVAL 30 MINUTE)
               WHERE id = :id
               LIMIT 1";
 
     $stmt = $this->conn->prepare($query);
     $stmt->execute([
       ":token_hash" => $tokenHash,
-      ":expires_at" => $expiresAt,
       ":id" => $userId
     ]);
-
     return $stmt->rowCount() > 0;
+  }
+
+  public function getValidPasswordResetRowByTokenHash($tokenHash)
+  {
+    $query = "SELECT *
+              FROM users 
+              WHERE reset_token_hash = :th
+              AND reset_expires_at > NOW()
+              LIMIT 1";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":th", $tokenHash);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_OBJ);
+  }
+
+  public function updatePasswordByEmail($email, $passwordHash)
+  {
+    $query = "UPDATE users SET user_password = :pass WHERE user_email = :email";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":pass", $passwordHash);
+    $stmt->bindParam(":email", $email);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+  }
+
+  public function deleteUsedToken($resetId)
+  {
+    $query = "UPDATE users SET reset_token_hash = '' WHERE id = :id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":id", $resetId);
+    return $stmt->execute();
   }
 }
